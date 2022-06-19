@@ -7,7 +7,10 @@ const createError = require("../../errors");
 const schema = Joi.object({
   name: Joi.string().min(3).required(),
   email: Joi.string().email().required(),
-  phone: Joi.number().min(6).required(),
+  phone: Joi.string()
+    .min(7)
+    .pattern(/^[0-9]+$/)
+    .required(),
 });
 
 router.get("/", async (req, res, next) => {
@@ -17,7 +20,6 @@ router.get("/", async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  // res.json({ message: "template message" });
 });
 
 router.get("/:contactId", async (req, res, next) => {
@@ -32,14 +34,13 @@ router.get("/:contactId", async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  // res.json({ message: "template message" });
 });
 
 router.post("/", async (req, res, next) => {
   try {
     const { error } = schema.validate(req.body);
     if (error) {
-      throw createError(400, error.message);
+      throw createError(400, { message: "missing required field" });
     }
     const { name, email, phone } = req.body;
     const contact = await contacts.addContact(name, email, phone);
@@ -47,13 +48,12 @@ router.post("/", async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  // res.json({ message: "template message" });
 });
 
 router.delete("/:contactId", async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const contact = await contacts.removeContact(id);
+    const { contactId } = req.params;
+    const contact = await contacts.removeContact(contactId);
     if (!contact) {
       res.status(404).json({ message: "Not Found" });
     } else {
@@ -62,18 +62,17 @@ router.delete("/:contactId", async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  // res.json({ message: "template message" });
 });
 
 router.put("/:contactId", async (req, res, next) => {
   try {
     const { error } = schema.validate(req.body);
     if (error) {
-      throw createError(400, error.message);
+      throw createError(400, { message: "missing fields" });
     }
     const { name, email, phone } = req.body;
-    const { id } = req.params;
-    const contact = await contacts.updateContact(id, name, email, phone);
+    const { contactId } = req.params;
+    const contact = await contacts.updateContact(contactId, name, email, phone);
     if (!contact) {
       res.status(404).json({ message: "Not Found" });
     } else {
@@ -82,7 +81,6 @@ router.put("/:contactId", async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  // res.json({ message: "template message" });
 });
 
 module.exports = router;
