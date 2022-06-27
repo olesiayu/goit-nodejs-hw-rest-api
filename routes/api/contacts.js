@@ -16,21 +16,13 @@ router.get("/", listContacts);
 
 router.get("/:contactId", getContactById);
 
-router.post(
-  "/",
-  validateRequest(schemaCreate, "missing required field"),
-  addContact
-);
+router.post("/", validateRequest(schemaCreate), addContact);
 
-router.put(
-  "/:contactId",
-  validateRequest(schemaCreate, "missing required field"),
-  updateContact
-);
+router.put("/:contactId", validateRequest(schemaCreate), updateContact);
 
 router.patch(
   "/:contactId/favorite",
-  validateRequest(schemaPatch, "missing field favorite"),
+  validateRequest(schemaPatch),
   updateStatusContact
 );
 
