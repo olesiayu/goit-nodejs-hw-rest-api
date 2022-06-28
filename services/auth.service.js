@@ -40,8 +40,23 @@ const loginUser = async ({ email, password }) => {
   };
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
+  await User.findByIdAndUpdate(user._id, { token });
 
   return { token };
 };
 
-module.exports = { registerUser, loginUser };
+const logoutUser = async (id) => {
+  await User.findByIdAndUpdate(id, { token: null });
+};
+
+const authenticateUser = async (token) => {
+  try {
+    const payload = jwt.verify(token, SECRET_KEY);
+    const { id } = payload;
+    return await User.findById(id);
+  } catch (e) {
+    return null;
+  }
+};
+
+module.exports = { registerUser, loginUser, logoutUser, authenticateUser };
