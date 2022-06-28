@@ -13,7 +13,6 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-//ПЕРЕВІРИТИ ЮЗЕРА ЧИ ПОКАЗУЄ
 const loginUser = async (req, res, next) => {
   try {
     const token = await authService.loginUser(req.body);
