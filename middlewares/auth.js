@@ -18,13 +18,4 @@ const auth = async (req, res, next) => {
   next();
 };
 
-// const author = (subscription) => {
-//   return (req, res, next) => {
-//     if (req.user.subscription !== subscription) {
-//       next({ status: 403, message: "Forbidden" });
-//     }
-//     next();
-//   };
-// };
-
 module.exports = { auth };
