@@ -2,7 +2,7 @@ const contacts = require("../services/contacts");
 
 const listContacts = async (req, res, next) => {
   try {
-    const all = await contacts.listContacts();
+    const all = await contacts.listContacts(req.query);
     res.json(all);
   } catch (e) {
     next(e);
@@ -25,7 +25,8 @@ const getContactById = async (req, res, next) => {
 
 const addContact = async (req, res, next) => {
   try {
-    const contact = await contacts.addContact(req.body);
+    const { _id } = req.user;
+    const contact = await contacts.addContact(req.body, _id);
     res.status(201).json(contact);
   } catch (e) {
     next(e);
